@@ -10,7 +10,7 @@ class OrderViewer(tk.Toplevel):
         self.title("My Order")
         self.geometry("1200x600")
 
-        # 订单列表
+        # Order List
         columns = ("Order ID", "Order time", "State", "Total amount", "Handle")
         self.tree = ttk.Treeview(self, columns=columns, show="headings")
         for col in columns:
@@ -59,7 +59,7 @@ class OrderViewer(tk.Toplevel):
         details_window = tk.Toplevel(self)
         details_window.title(f"Order details - Order No. {order_id}")
 
-        # 显示订单商品
+        # Display order products
         cursor = self.db.cursor(dictionary=True)
         cursor.execute("""
             SELECT p.name, p.price, v.business_name 

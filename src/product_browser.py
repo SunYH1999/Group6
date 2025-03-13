@@ -37,7 +37,7 @@ class ProductBrowser(tk.Toplevel):
         self.load_products()
 
     def load_products(self):
-        # 清空原有数据
+        # Clear existing data
         for row in self.tree.get_children():
             self.tree.delete(row)
 
@@ -179,7 +179,7 @@ class ProductBrowser(tk.Toplevel):
         rate_window = tk.Toplevel(self)
         rate_window.title(f"Rate the product {product_id}")
 
-        # 获取历史评分
+        # Obtain historical ratings
         cursor = self.db.cursor()
         cursor.execute("SELECT score FROM ratings WHERE customer_id = %s AND product_id = %s",
                      (self.user[0], product_id))

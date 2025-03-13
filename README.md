@@ -1,3 +1,5 @@
+# technology stack
+Python+Tkinter(GUI)+mysql
 
 # Run steps
 
