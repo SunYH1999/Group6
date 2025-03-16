@@ -24,3 +24,13 @@ db = mysql.connector.connect(
 
 ## Start program
 `python src/main.py`
+
+# Login information
+
+## admin
+('admin1', '123456')
+
+## customer
+('Zhangsan', '000000'),
+('Lisi', '000000'),
+('Xiaoming', '000000');
