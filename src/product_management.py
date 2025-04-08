@@ -97,10 +97,64 @@ class ProductManager(tk.Toplevel):
                    command=lambda: AddProductDialog(self, self.db, vendor_id, self.load_products).show()).pack()
 
 
+
 class AddProductDialog(Dialog):
     def __init__(self, parent, db, vendor_id, refresh_callback):
         self.db = db
         self.vendor_id = vendor_id
+        self.refresh_callback = refresh_callback
         super().__init__(parent, "Add Product")
-    # Fill in your functional code
-    # Admin Panel - Product Management - Product Add
+
+    def body(self, master):
+        ttk.Label(master, text="Product Name:").grid(row=0, column=0, padx=5, pady=5, sticky="w")
+        self.name_entry = ttk.Entry(master)
+        self.name_entry.grid(row=0, column=1, padx=5, pady=5)
+
+        ttk.Label(master, text="Price:").grid(row=1, column=0, padx=5, pady=5, sticky="w")
+        self.price_entry = ttk.Entry(master)
+        self.price_entry.grid(row=1, column=1, padx=5, pady=5)
+
+        ttk.Label(master, text="Tags:").grid(row=2, column=0, padx=5, pady=5, sticky="w")
+        self.tags_entry = ttk.Entry(master)
+        self.tags_entry.grid(row=2, column=1, padx=5, pady=5)
+
+        return self.name_entry  # Focus on the name entry field
+
+    def validate(self):
+        name = self.name_entry.get().strip()
+        price = self.price_entry.get().strip()
+        tags = self.tags_entry.get().strip()
+
+        if not name:
+            messagebox.showerror("Error", "Product name cannot be empty.")
+            return False
+
+        try:
+            price = float(price)
+            if price < 0:
+                raise ValueError("Price cannot be negative.")
+        except ValueError:
+            messagebox.showerror("Error", "Invalid price format. Please enter a valid number.")
+            return False
+
+        return True
+
+    def apply(self):
+        name = self.name_entry.get().strip()
+        price = float(self.price_entry.get().strip())
+        tags = self.tags_entry.get().strip()
+        tags_json = json.dumps([tag.strip() for tag in tags.split(",") if tag.strip()])
+
+        cursor = self.db.cursor()
+        try:
+            cursor.execute(
+                "INSERT INTO products (vendor_id, name, price, tags) VALUES (%s, %s, %s, %s)",
+                (self.vendor_id, name, price, tags_json)
+            )
+            self.db.commit()
+            messagebox.showinfo("Success", "Product added successfully!")
+            self.refresh_callback()
+        except mysql.connector.Error as err:
+            messagebox.showerror("Database Error", str(err))
+        finally:
+            cursor.close()

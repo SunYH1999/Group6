@@ -58,7 +58,7 @@ class ProductBrowser(tk.Toplevel):
 
         for product in products:
             tags = ", ".join(eval(product["tags"]))
-            score = f"{product['avg_score']:.1f}" if product['avg_score'] else "暂无评分"
+            score = f"{product['avg_score']:.1f}" if product['avg_score'] else "no score"
             self.tree.insert("", "end", values=(
                 product["product_id"],
                 product["name"],
